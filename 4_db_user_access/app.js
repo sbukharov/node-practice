@@ -75,6 +75,12 @@ app.use(function (req, res, next) {
   next();
 });
 
+//Create global variable to track login
+app.get('*', function(req,res,next) {
+  res.locals.user = req.user || null;
+  next();
+});
+
 //Routing for pages and resource requests
 app.use('/', index);
 app.use('/users', users);
