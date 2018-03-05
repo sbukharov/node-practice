@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h2.page-header Registration Page
+  p Please fill our the form below.
+  form(method="post", action="/users/register", enctype="multipart/formdata")
+    .form-group
+      label Name
+      input.form-control(name="name",type="text",placeholder="Enter your name")
+    .form-group
+      label Email
+      input.form-control(name="email",type="email",placeholder="Enter your email")
+    .form-group
+      label Username
+      input.form-control(name="username",type="text",placeholder="Enter your username")
+    .form-group
+      label Password
+      input.form-control(name="password",type="password",placeholder="Enter your password")
+    .form-group
+      label Confirm password
+      input.form-control(name="password2",type="password",placeholder="Confirm your password")
+    .form-group
+      label Profile image
+      input.form-control(name="profileimage",type="file")
+    input(type="submit",name="submit",value="Register").btn.btn-primary
