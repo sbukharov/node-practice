@@ -6,11 +6,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-
 var flash = require('connect-flash');
 var mongodb = require('mongodb');
+var bcrypt = require('bcryptjs');
 
-/** Import and init passport,  mongoose, multer*/
+/** Import and init passport, mongoose, multer*/
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var LocalStrategy = require('passport-local').Strategy;
