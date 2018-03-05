@@ -1,12 +1,29 @@
+/** Import dependencies */
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
+var flash = require('connect-flash');
+var mongodb = require('mongodb');
+
+/** Import and init passport,  mongoose, multer*/
+var passport = require('passport');
+var expressValidator = require('express-validator');
+var LocalStrategy = require('passport-local').Strategy;
+var mongoose = require('mongoose');
+var db = mongoose.connection;
+var multer = require('multer');
+var upload = multer({dest:'./uploads'});
+
+/** Import routes and config file */
 var index = require('./routes/index');
 var users = require('./routes/users');
+var config = require('./config');
+
 
 var app = express();
 
@@ -22,6 +39,43 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Handle Sessions
+app.use(session({
+    secret:config.secret,
+    saveUninitialized:true,
+    resave:true
+}));
+
+// Passport authentication setup 
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Validator middleware setup
+app.use(expressValidator({
+    errorFormatter: function(param, msg, value) {
+        var namespace = param.split('.'),
+        root = namespace.shift(),
+        formParam = root;
+        
+    while(namespace.length) {
+        formParam += '['+namespace.shift() + ']';
+    }
+    return {
+        param: formParam,
+        msg: msg,
+        value:value
+    };
+    }
+}));
+
+//Flash middleware setup
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+//Routing for pages and resource requests
 app.use('/', index);
 app.use('/users', users);
 
